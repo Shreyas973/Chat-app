@@ -7,14 +7,14 @@ import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
   const {
-    messages = [], 
+    messages , 
     selectedUser,
     setSelectedUser,
     sendMessage,
     getMessages,
   } = useContext(ChatContext);
 
-  const { authUser, onlineUsers = [] } = useContext(AuthContext);
+  const { authUser, onlineUsers  } = useContext(AuthContext);
 
   const scrollEnd = useRef();
   const [input, setInput] = useState('');
@@ -28,7 +28,7 @@ const ChatContainer = () => {
 
   // Scroll to latest message
   useEffect(() => {
-    if (scrollEnd.current && messages?.length) {
+    if (scrollEnd.current && messages) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
@@ -36,9 +36,9 @@ const ChatContainer = () => {
   // Send text message
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (input.trim() === '') return;
+    if (input.trim() === "") return null;
     await sendMessage({ text: input.trim() });
-    setInput('');
+    setInput("");
   };
 
   // Send image message
@@ -68,10 +68,9 @@ const ChatContainer = () => {
         />
         <p className='flex-1 text-lg text-white flex items-center gap-2'>
           {selectedUser.fullName}
-          {Array.isArray(onlineUsers) &&
-            onlineUsers.includes(selectedUser._id) && (
+          {onlineUsers.includes(selectedUser._id)}
               <span className='w-2 h-2 rounded-full bg-green-500'></span>
-            )}
+            
         </p>
         <img
           onClick={() => setSelectedUser(null)}
@@ -88,7 +87,7 @@ const ChatContainer = () => {
 
       {/* Chat Area */}
       <div className='flex flex-col h-[calc(100%-120px)] overflow-y-scroll p-3 pb-6'>
-        {Array.isArray(messages) &&
+        {
           messages.map((msg, index) => (
             <div
               key={index}
@@ -97,8 +96,7 @@ const ChatContainer = () => {
               }`}
             >
               {msg.image ? (
-                <img
-                  src={msg.image}
+                <img src={msg.image}
                   alt=''
                   className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-8'
                 />
@@ -138,7 +136,7 @@ const ChatContainer = () => {
             <input
               onChange={(e) => setInput(e.target.value)}
               value={input}
-              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage(e)}
+              onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e):null}
               type='text'
               placeholder='Send a message'
               className='flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent'

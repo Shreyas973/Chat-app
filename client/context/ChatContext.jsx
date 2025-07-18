@@ -12,17 +12,18 @@ export const ChatProvider = ({ children }) => {
 
   const { socket, axios } = useContext(AuthContext);
 
+ 
   const getUsers = async () => {
-    try {
-      const { data } = await axios.get("/api/messages/users");
-      if (data.success) {
-        setUsers(data.user || []);
-        setUnseenMessages(data.unseenMessages || {});
-      }
-    } catch (error) {
-      toast.error(error.message || "Failed to load users");
+  try {
+    const { data } = await axios.get("/api/messages/users");
+    if (data.success) {
+      setUsers(data.users || []); // <-- FIXED: use data.users
+      setUnseenMessages(data.unseenMessages || {});
     }
-  };
+  } catch (error) {
+    toast.error(error.message || "Failed to load users");
+  }
+};
 
   const getMessages = async (userId) => {
     try {

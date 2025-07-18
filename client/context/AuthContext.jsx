@@ -92,7 +92,7 @@ const connectSocket=(userData)=>{
     newSocket.connect();
     setSocket(newSocket)
 
-    newSocket.on("getOnlineUser",(userIds)=>{
+    newSocket.on("getOnlineUsers",(userIds)=>{
         setOnlineUsers(userIds)
     })
 
